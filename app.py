@@ -4,7 +4,7 @@ from sqlalchemy.exc import OperationalError, IntegrityError
 from datetime import datetime
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:root123@localhost/flask_crud_db2"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:root123@localhost/flask_crud_db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
@@ -19,6 +19,7 @@ class Student(db.Model):
     joined_date = db.Column(db.Date, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+
 class Course(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     course_title = db.Column(db.String(100), unique=True, nullable=False)
@@ -26,10 +27,10 @@ class Course(db.Model):
     duration_months = db.Column(db.Integer, nullable=False)
     description = db.Column(db.Text)
     is_available = db.Column(db.Boolean, default=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)    
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 def error(msg, code=400):
-    return jsonify({"error": msg}), code    
+    return jsonify({"error": msg}), code
 
 @app.route("/api/students", methods=["POST"])
 def create_student():
@@ -68,8 +69,9 @@ def create_student():
         return jsonify({"message": "Student created", "id": student.id}), 201
 
     except Exception:
-        return error("Invalid input data")   
- 
+        return error("Invalid input data")
+
+
 @app.route("/api/students", methods=["GET"])
 def get_students():
     students = Student.query.all()
@@ -78,7 +80,8 @@ def get_students():
         "name": s.full_name,
         "email": s.email,
         "age": s.age
-    } for s in students]) 
+    } for s in students])
+
 
 @app.route("/api/students/<int:id>", methods=["GET"])
 def get_student(id):
@@ -92,6 +95,7 @@ def get_student(id):
         "email": s.email,
         "age": s.age
     })
+
 
 @app.route("/api/students/<int:id>", methods=["PUT"])
 def update_student(id):
@@ -109,6 +113,7 @@ def update_student(id):
 
     db.session.commit()
     return jsonify({"message": "Updated"})
+
 
 @app.route("/api/students/<int:id>", methods=["DELETE"])
 def delete_student(id):
@@ -224,4 +229,4 @@ if __name__ == "__main__":
     with app.app_context():
         db.create_all()
 
-    app.run(debug=True)    
+    app.run(debug=True)
