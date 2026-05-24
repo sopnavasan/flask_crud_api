@@ -56,5 +56,14 @@ def create_student():
         return jsonify({"message": "Student created", "id": student.id}), 201
 
     except Exception:
-        return error("Invalid input data")    
+        return error("Invalid input data")   
  
+@app.route("/api/students", methods=["GET"])
+def get_students():
+    students = Student.query.all()
+    return jsonify([{
+        "id": s.id,
+        "name": s.full_name,
+        "email": s.email,
+        "age": s.age
+    } for s in students]) 
