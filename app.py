@@ -34,3 +34,5 @@ def create_student():
         return error("Joined date is required.")
 
 
+    if Student.query.filter_by(email=data.get("email")).first():
+        return error("Email already exists")
