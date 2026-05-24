@@ -18,3 +18,19 @@ class Student(db.Model):
     is_active = db.Column(db.Boolean, default=True)
     joined_date = db.Column(db.Date, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+@app.route("/api/students", methods=["POST"])
+def create_student():
+    data = request.get_json()
+    if not data.get("full_name"):
+        return error("Full name is required.")
+
+    if not data.get("email"):
+         return error("Email is required.")
+    if not data.get("age"):
+        return error("Age is required.")
+
+    if not data.get("joined_date"):
+        return error("Joined date is required.")
+
+
