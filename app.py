@@ -98,3 +98,12 @@ def update_student(id):
     db.session.commit()
     return jsonify({"message": "Updated"})
 
+@app.route("/api/students/<int:id>", methods=["DELETE"])
+def delete_student(id):
+    s = Student.query.get(id)
+    if not s:
+        return error("Student not found", 404)
+
+    db.session.delete(s)
+    db.session.commit()
+    return jsonify({"message": "Deleted"})
