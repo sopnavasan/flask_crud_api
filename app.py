@@ -36,3 +36,25 @@ def create_student():
 
     if Student.query.filter_by(email=data.get("email")).first():
         return error("Email already exists")
+
+    try:
+        student = Student(
+            full_name=data["full_name"],
+            email=data["email"],
+            age=int(data["age"]),
+            cgpa=float(data.get("cgpa", 0.0)),
+            is_active=data.get("is_active", True),
+            joined_date=datetime.strptime(data["joined_date"], "%Y-%m-%d").date()
+        )
+
+        if student.age <= 0:
+            return error("Age must be positive")
+
+        db.session.add(student)
+        db.session.commit()
+
+        return jsonify({"message": "Student created", "id": student.id}), 201
+
+    except Exception:
+        return error("Invalid input data")    
+ 
