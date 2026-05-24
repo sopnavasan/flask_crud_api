@@ -67,3 +67,16 @@ def get_students():
         "email": s.email,
         "age": s.age
     } for s in students]) 
+
+@app.route("/api/students/<int:id>", methods=["GET"])
+def get_student(id):
+    s = Student.query.get(id)
+    if not s:
+        return error("Student not found", 404)
+
+    return jsonify({
+        "id": s.id,
+        "name": s.full_name,
+        "email": s.email,
+        "age": s.age
+    })
