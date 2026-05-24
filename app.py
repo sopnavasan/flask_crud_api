@@ -80,3 +80,21 @@ def get_student(id):
         "email": s.email,
         "age": s.age
     })
+
+@app.route("/api/students/<int:id>", methods=["PUT"])
+def update_student(id):
+    s = Student.query.get(id)
+    if not s:
+        return error("Student not found", 404)
+
+    data = request.get_json()
+    if not data:
+        return error("Missing data")
+
+    s.full_name = data.get("full_name", s.full_name)
+    s.email = data.get("email", s.email)
+    s.age = int(data.get("age", s.age))
+
+    db.session.commit()
+    return jsonify({"message": "Updated"})
+
